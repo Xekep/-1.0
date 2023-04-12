@@ -1,8 +1,12 @@
+<?php
+require_once('functions.php');
+$metrologists = getMetrologistsList();
+?>
 <!DOCTYPE html>
 <html lang="en" >
    <head>
       <meta charset="UTF-8">
-      <title>Костыль 1.0</title>
+      <title>Костыль 2.0</title>
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
       <link rel="stylesheet" href="./style.css">
       <link rel="stylesheet" href="./loader.css">
@@ -24,7 +28,7 @@
             </div>
          </div>
          <div id="form">
-             <h1>Костыль 1.0</h1>
+             <h1>Костыль 2.0</h1>
          <div class="input-wrapper">
             <input class="input" type="text" name="protocol" id="protocol" placeholder="Введите № протокола АРШИН" autocomplete="off">
             <div class="icons-container">
@@ -37,8 +41,13 @@
          </div>
          <div class="select-wrapper">
             <select class="select">
-               <option value="metrologist1">Поверитель1</option>
-               <option value="metrologist2">Поверитель2</option>
+               <?php
+               $counter = 0;
+               foreach ($metrologists as $metrologist) {
+                   echo '<option value="metrologist'.++$counter.'">'.$metrologist['LastName'].' '.$metrologist['FirstName'].'</option>';
+               }
+            ?>
+            
             </select>
          </div>
          </div>

@@ -16,20 +16,6 @@ const SPACE_KEYCODE = 32;
 
 let insertText = false;
 
-textSelect.addEventListener('dblclick', function(event) {
-    let newMetrologist = prompt('Введите фамилию метролога', '');
-    if(newMetrologist.match(/^[а-яё]{2,20}$/i))
-    {
-        newMetrologist = newMetrologist.charAt(0).toUpperCase() + newMetrologist.slice(1).toLowerCase();
-		let newOption = document.createElement("option");
-		let index = textSelect.options.length;
-		newOption.value = "metrologist" + (index + 1);
-		newOption.text = newMetrologist;
-		textSelect.add(newOption);
-		textSelect.selectedIndex = index;
-    }
-});
-
 textInput.addEventListener("input", e => {
 	if (e.data != " ") {
 		insertText = true;
@@ -55,18 +41,14 @@ textInput.addEventListener("input", e => {
 
 function foo()
 {
-    //var params = {protocol: textInput.value, metrologist: textSelect.options[textSelect.selectedIndex].text};
-    //var url = "/protocol/" + window.btoa(unescape(encodeURIComponent(JSON.stringify(params))));
-    
-   // setTimeout(() => container.classList.add("hidden"), 10);
     form.classList.add("hidden");
     loader.classList.remove("hidden");
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/protocol/");
+    xhr.open("POST", "/xml");
     xhr.responseType = 'arraybuffer';
     var formData = new FormData();
     formData.append('protocol', textInput.value);
-    formData.append("metrologist", textSelect.options[textSelect.selectedIndex].text);
+    formData.append("metrologist_id", textSelect.selectedIndex);
     xhr.send(formData);
     
     xhr.onerror = function() {

@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>Костыль 1.0 - Руководство</title>
+  <title>Костыль 2.0 - Руководство</title>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 <link rel="stylesheet" href="./style.css">
 
@@ -31,7 +31,7 @@ window.onload = function () {
       <div class="slider-page--skew">
         <div class="slider-page__content">
           <h1 class="slider-page__title slider-page__title--big">
-            Руководство Костыль 1.0
+            Руководство Костыль 2.0
           </h1>
           <!-- /.slider-page__title slider-page__title--big -->
           <h2 class="slider-page__title">
@@ -39,7 +39,7 @@ window.onload = function () {
           </h2>
           <!-- /.slider-page__title -->
           <p class="slider-page__description">
-            Установить расширение браузера <a class="slider-page__link" href="https://www.tampermonkey.net/">Tampermonkey</a>, затем установить пользовательский скрипт Костыль 1.0
+            Перейти в раздел АРШИН <a class="slider-page__link" href="https://fgis.gost.ru/fundmetrology/cm/lk/importfiles">"Заявки на публикацию"</a> и скопировать номер протокола обработки заявки
           </p>
           <!-- /.slider-page__description -->
         </div>
@@ -61,7 +61,7 @@ window.onload = function () {
           </h2>
           <!-- /.slider-page__title -->
           <p class="slider-page__description">
-            Перейти в раздел АРШИН <a class="slider-page__link" href="https://fgis.gost.ru/fundmetrology/cm/lk/importfiles">"Заявки на публикацию"</a> и скопировать номер протокола обработки заявки
+            В <a class="slider-page__link" href="../">Костыль 2.0</a> ввести номер протокола АРШИН и выбрать из выпадающего списка фамилию поверителя
           </p>
           <!-- /.slider-page__description -->
         </div>
@@ -103,7 +103,7 @@ window.onload = function () {
           </h2>
           <!-- /.slider-page__title -->
           <p class="slider-page__description">
-            В <a class="slider-page__link" href="../">Костыль 1.0</a> ввести номер протокола АРШИН и выбрать из выпадающего списка фамилию поверителя
+            Открыть личный кабинет ФГИС "Росакктеридации", перейти в раздел "Сведения по ОЕИ", затем открыть вкладку "Поверка СИ" и загрузить XML файл
           </p>
           <!-- /.slider-page__description -->
         </div>
@@ -131,75 +131,10 @@ window.onload = function () {
       <div class="slider-page--skew">
         <div class="slider-page__content">
           <h2 class="slider-page__title">
-            ШАГ ЧЕТВЁРТЫЙ
-          </h2>
-          <!-- /.slider-page__title -->
-          <p class="slider-page__description">
-              Открыть личный кабинет ФГИС "Росакктеридации", перейти в раздел "Сведения по ОЕИ", затем открыть вкладку "Поверка СИ"
-          </p>
-          <!-- /.slider-page__description -->
-        </div>
-        <!-- /.slider-page__content -->
-      </div>
-      <!-- /.slider-page--skew -->
-    </div>
-    <!-- /.slider-page slider-page--right -->
-  </article>
-  <!-- /.js-scrolling__page js-scrolling__page-4 -->
-  
-  
-  <article class="js-scrolling__page js-scrolling__page-5">
-    <div class="slider-page slider-page--left">
-      <div class="slider-page--skew">
-        <div class="slider-page__content">
-        </div>
-        <!-- /.slider-page__content -->
-      </div>
-      <!-- /.slider-page--skew -->
-    </div>
-    <!-- /.slider-page slider-page--left -->
-
-    <div class="slider-page slider-page--right">
-      <div class="slider-page--skew">
-        <div class="slider-page__content">
-          <h2 class="slider-page__title">
-            ШАГ ПЯТЫЙ
-          </h2>
-          <!-- /.slider-page__title -->
-          <p class="slider-page__description">
-            Перетащить полученный JS файл в квадратную форму, находящуюся в левом нижнем углу
-          </p>
-          <!-- /.slider-page__description -->
-        </div>
-        <!-- /.slider-page__content -->
-      </div>
-      <!-- /.slider-page--skew -->
-    </div>
-    <!-- /.slider-page slider-page--right -->
-  </article>
-  <!-- /.js-scrolling__page js-scrolling__page-5 -->
-  
-  
-  <article class="js-scrolling__page js-scrolling__page-6">
-    <div class="slider-page slider-page--right">
-      <div class="slider-page--skew">
-        <div class="slider-page__content">
-        </div>
-        <!-- /.slider-page__content -->
-      </div>
-      <!-- /.slider-page--skew -->
-    </div>
-    <!-- /.slider-page slider-page--left -->
-
-    <div class="slider-page slider-page--left">
-      <div class="slider-page--skew">
-        <div class="slider-page__content">
-          <h2 class="slider-page__title">
             ЧАЙ-БРЕЙК
           </h2>
           <!-- /.slider-page__title -->
           <p class="slider-page__description">
-            
 <?php
 $af = ['Как чай нуждается во времени для заваривания, так и данные требуют времени для загрузки - терпение наградит нас лучшим результатом',
 'Вентилятор крутится, данные грузятся - мы же успокаиваем свой дух чаем и позволяем процессу протекать своим естественным путем',
@@ -221,7 +156,7 @@ echo $af[rand() % count($af)];
     </div>
     <!-- /.slider-page slider-page--right -->
   </article>
-  <!-- /.js-scrolling__page js-scrolling__page-6 -->
+  <!-- /.js-scrolling__page js-scrolling__page-4 -->
   
 </section>
 <!-- /.slider-pages -->
