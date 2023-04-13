@@ -4,65 +4,115 @@ require_once('config.php');
 require_once('restapi.php');
 require_once('functions.php');
 
+// Функция для отдачи файла
+function fileForceDownload($fileName, $file) {
+  if (file_exists($file)) {
+    // сбрасываем буфер вывода PHP, чтобы избежать переполнения памяти выделенной под скрипт
+    // если этого не сделать файл будет читаться в память полностью!
+    if (ob_get_level()) {
+      ob_end_clean();
+    }
+    // заставляем браузер показать окно сохранения файла
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename=' . $fileName);
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($file));
+    // читаем файл и отправляем его пользователю
+    readfile($file);
+    exit;
+  }
+}
+
 // Функция для возврата ошибки 406 и завершения скрипта
-function err()
-{
-    http_response_code(406);
-    exit();
+function err() {
+  http_response_code(406);
+  exit();
 }
 
-// Функция для отправки ответа с XML-данными в виде вложения
-function sendResponse($filename, $data_text)
-{
-    header('Content-type: application/txt');
-    header('Content-Length: ' . strlen($data_text));
-	header('Content-Description: File Transfer');
-	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-	header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-	header('Cache-Control: no-cache, must-revalidate');
-	header('Content-Disposition: attachment; filename="'.$filename.'.xml"');
-	echo $data_text;
+// Функция для создания архива XML-документов
+function createArchive($fileNamePrefix, array $files): ?string {
+  if (empty($files)) {
+    return null;
+  }
+
+  $archiveName = tempnam(sys_get_temp_dir(), 'archive');
+  $zip = new ZipArchive();
+  if ($zip->open($archiveName, ZipArchive::CREATE) === true) {
+    $counter = 0;
+    foreach ($files as $file) {
+      $zip->addFile($file, $fileNamePrefix.'_part'.(++$counter).'.xml');
+    }
+    $zip->close();
+    return $archiveName;
+  } else {
+    return null;
+  }
 }
 
-// Функция для создания XML-документа на основе переданных параметров
-function createXML($firstName, $lastName, $snils, $records): ?string
-{
-    if (empty($records)) {
-        return null;
-    }
-    $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><Message></Message>');
+function createXML($firstName, $lastName, $snils, $records): array {
+  if (empty($records)) {
+    return [];
+  }
 
-    // Создание элемента VerificationMeasuringInstrumentData
-    $verificationMeasuringInstrumentData = $xml->addChild('VerificationMeasuringInstrumentData');
-    foreach($records as $record)
-    {
-        $verificationMeasuringInstrument = $verificationMeasuringInstrumentData->addChild('VerificationMeasuringInstrument');
-        $verificationMeasuringInstrument->addChild('NumberVerification', $record['NumberVerification']);
-        $verificationMeasuringInstrument->addChild('DateVerification', $record['DateVerification']);
-        $verificationMeasuringInstrument->addChild('DateEndVerification', $record['DateEndVerification']);
-        $verificationMeasuringInstrument->addChild('TypeMeasuringInstrument', $record['TypeMeasuringInstrument']);
-        $approvedEmployee = $verificationMeasuringInstrument->addChild('ApprovedEmployee');
-        $name = $approvedEmployee->addChild('Name');
-        $name->addChild('Last', $lastName);
-        $name->addChild('First', $firstName);
-        $approvedEmployee->addChild('SNILS', $snils);
-        $verificationMeasuringInstrument->addChild('ResultVerification', $record['ResultVerification']);
-    }
+  $fileCounter = 0;
+  $xmlArray = [];
+  $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><Message></Message>');
 
-    // Создание элемента SaveMethod
+  // Создание элемента VerificationMeasuringInstrumentData
+  $verificationMeasuringInstrumentData = $xml->addChild('VerificationMeasuringInstrumentData');
+
+  foreach($records as $index => $record) {
+    $verificationMeasuringInstrument = $verificationMeasuringInstrumentData->addChild('VerificationMeasuringInstrument');
+    $verificationMeasuringInstrument->addChild('NumberVerification', $record['NumberVerification']);
+    $verificationMeasuringInstrument->addChild('DateVerification', $record['DateVerification']);
+    $verificationMeasuringInstrument->addChild('DateEndVerification', $record['DateEndVerification']);
+    $verificationMeasuringInstrument->addChild('TypeMeasuringInstrument', $record['TypeMeasuringInstrument']);
+    $approvedEmployee = $verificationMeasuringInstrument->addChild('ApprovedEmployee');
+    $name = $approvedEmployee->addChild('Name');
+    $name->addChild('Last', $lastName);
+    $name->addChild('First', $firstName);
+    $approvedEmployee->addChild('SNILS', $snils);
+    $verificationMeasuringInstrument->addChild('ResultVerification', $record['ResultVerification']);
+
+    // Создание нового файла XML при достижении максимального количества записей
+    if (($index + 1) % 999 === 0) {
+      $fileCounter++;
+      $fileName = tempnam(sys_get_temp_dir(), 'xml');
+      $xml->addChild('SaveMethod', '1'); // 1 - черновик, 2 - отправлено
+      $xmlString = $xml->asXML();
+      file_put_contents($fileName, $xmlString);
+      $xmlArray[] = $fileName;
+      unset($xml);
+      $xml = new SimpleXMLElement('<?xml version="1.0" encoding="utf-8"?><Message></Message>');
+      $verificationMeasuringInstrumentData = $xml->addChild('VerificationMeasuringInstrumentData');
+    }
+  }
+
+  // Добавление оставшихся записей в последний файл
+  if (count($verificationMeasuringInstrumentData->children()) > 0) {
+    $fileCounter++;
+    $fileName = tempnam(sys_get_temp_dir(), 'xml');
     $xml->addChild('SaveMethod', '1'); // 1 - черновик, 2 - отправлено
+    $xmlString = $xml->asXML();
+    file_put_contents($fileName, $xmlString);
+    $xmlArray[] = $fileName;
+  }
 
-    // Сохранение XML файла
-    return $xml->asXML();
+    return $xmlArray;
 }
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['protocol'], $_POST['metrologist_id'])) {
-    err();
+    
+if (!isset($_POST['protocol'], $_POST['metrologist_id'])) {
+  err();
 }
 
 $metrologists = getMetrologistsList();
+
 if (!$metrologists || !is_numeric($_POST['metrologist_id']) || $_POST['metrologist_id'] >= count($metrologists)) {
-    err();
+  err();
 }
 
 $protocol_id = $_POST['protocol'];
@@ -72,31 +122,30 @@ $lastName = $metrologist['LastName'];
 $snils = $metrologist['SNILS'];
 
 $api = new restapi(AUTH_TOKEN);
+    
+// Получаем записи по выбранному протоколу
+$records = $api->get_report_data($protocol_id);
 
-try {
-    $verificationData = [];
+// Создание XML-файлов
+$xmlFiles = createXML($firstName, $lastName, $snils, $records);
+if(count($xmlFiles) == 1)
+{
+  fileForceDownload($protocol_id . '.xml', $xmlFiles[0]);
+} else {
+  // Создание архива из XML-файлов
+  $archiveName = createArchive($protocol_id, $xmlFiles);
 
-    // Получение данных для формирования XML
-    $xml_protocol = new SimpleXMLElement($api->get_report($protocol_id));
-    $records = $xml_protocol->children()->appProcessed->record;
-
-    foreach ($records as $record) {
-        $verification_id = (string)$record->success->globalID;
-        $verification = json_decode($api->verification($verification_id));
-
-        $verificationData[] = [
-            'TypeMeasuringInstrument' => $verification->result->miInfo->singleMI->modification,
-            'DateVerification' => $verification->result->vriInfo->vrfDate,
-            'DateEndVerification' => $verification->result->vriInfo->validDate,
-            'ResultVerification' => isset($verification->result->vriInfo->applicable) ? 1 : 2, // 1 - пригоден, 2 - непригоден
-            'NumberVerification' => $verification_id,
-        ];
+  if ($archiveName) {
+    // Отдаем архив пользователю
+    fileForceDownload($protocol_id . '.zip', $archiveName);
+    // Удаление временных файлов
+    foreach ($xmlFiles as $xmlFile) {
+      unlink($xmlFile);
     }
-
-    // Формирование XML и отправка данных
-    $xml = createXML($firstName, $lastName, $snils, $verificationData);
-    sendResponse("$protocol_id", $xml);
-} catch (Exception $e) {
+    unlink($archiveName);
+  } else {
+    // Возвращаем ошибку 406
     err();
+  }
 }
 ?>
