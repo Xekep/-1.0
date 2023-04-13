@@ -36,8 +36,8 @@ class restapi
 
             $verificationData[] = [
                 'TypeMeasuringInstrument' => $verification->result->miInfo->singleMI->modification,
-                'DateVerification' => $verification->result->vriInfo->vrfDate,
-                'DateEndVerification' => $verification->result->vriInfo->validDate,
+                'DateVerification' => date('Y-m-d', strtotime($verification->result->vriInfo->vrfDate)),
+                'DateEndVerification' => date('Y-m-d', strtotime($verification->result->vriInfo->validDate)),
                 'ResultVerification' => isset($verification->result->vriInfo->applicable) ? 1 : 2, // 1 - пригоден, 2 - непригоден
                 'NumberVerification' => $verification_id,
                 ];
