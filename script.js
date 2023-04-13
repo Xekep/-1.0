@@ -44,7 +44,7 @@ function foo()
     form.classList.add("hidden");
     loader.classList.remove("hidden");
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/xml");
+    xhr.open("POST", "/xml.php");
     xhr.responseType = 'arraybuffer';
     var formData = new FormData();
     formData.append('protocol', textInput.value);
