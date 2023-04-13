@@ -116,7 +116,7 @@ if (!$metrologists || !is_numeric($_POST['metrologist_id']) || !is_numeric($_POS
 }
 
 $protocol_id = (int)$_POST['protocol'];
-$metrologist =  (int)$metrologists[$_POST['metrologist_id']];
+$metrologist = $metrologists[$_POST['metrologist_id']];
 $firstName = $metrologist['FirstName'];
 $lastName = $metrologist['LastName'];
 $snils = $metrologist['SNILS'];
