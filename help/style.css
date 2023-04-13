@@ -145,13 +145,13 @@ body {
 }
 .js-scrolling__page-2 .slider-page--right .slider-page__content {
   background: url("img/step2.jpg") no-repeat center center;
-  background-color: white;
+  background-color: #84817a;
   background-size: 40%;
 }
 
 .js-scrolling__page-3 .slider-page--left .slider-page__content {
   background: url("img/step3.jpg") no-repeat center center;
-  background-color: #84817a;
+  background-color: white;
   background-size: 40%;
 }
 .js-scrolling__page-3 .slider-page--right .slider-page__content {
@@ -164,25 +164,6 @@ body {
   background-size: 40%;
 }
 .js-scrolling__page-4 .slider-page--left .slider-page__content {
-  background-color: #e2e2e2;
-  color: #282828;
-}
-
-.js-scrolling__page-5 .slider-page--left .slider-page__content {
-  background: url("img/step5.jpg") no-repeat center center;
-  background-color: white;
-  background-size: 40%;
-}
-.js-scrolling__page-5 .slider-page--right .slider-page__content {
-  background-color: #282828;
-}
-
-.js-scrolling__page-6 .slider-page--right .slider-page__content {
-  background: url("img/step6.jpg") no-repeat center center;
-  background-color: white;
-  background-size: 40%;
-}
-.js-scrolling__page-6 .slider-page--left .slider-page__content {
   background-color: #e2e2e2;
   color: #282828;
 }
