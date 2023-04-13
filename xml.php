@@ -111,12 +111,12 @@ if (!isset($_POST['protocol'], $_POST['metrologist_id'])) {
 
 $metrologists = getMetrologistsList();
 
-if (!$metrologists || !is_numeric($_POST['metrologist_id']) || $_POST['metrologist_id'] >= count($metrologists)) {
+if (!$metrologists || !is_numeric($_POST['metrologist_id']) || !is_numeric($_POST['protocol']) || $_POST['metrologist_id'] >= count($metrologists)) {
   err();
 }
 
-$protocol_id = $_POST['protocol'];
-$metrologist = $metrologists[$_POST['metrologist_id']];
+$protocol_id = (int)$_POST['protocol'];
+$metrologist =  (int)$metrologists[$_POST['metrologist_id']];
 $firstName = $metrologist['FirstName'];
 $lastName = $metrologist['LastName'];
 $snils = $metrologist['SNILS'];
