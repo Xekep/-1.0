@@ -125,7 +125,7 @@ $api = new restapi(AUTH_TOKEN);
     
 // Получаем записи по выбранному протоколу
 $records = $api->get_report_data($protocol_id);
-
+if(is_null($records)) err();
 // Создание XML-файлов
 $xmlFiles = createXML($firstName, $lastName, $snils, $records);
 if(count($xmlFiles) == 1)
