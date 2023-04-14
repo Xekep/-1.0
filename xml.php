@@ -83,7 +83,7 @@ function createXML($firstName, $lastName, $snils, $records): array {
     if (($index + 1) % 999 === 0) {
       $fileCounter++;
       $fileName = tempnam(sys_get_temp_dir(), 'xml');
-      $xml->addChild('SaveMethod', '1'); // 1 - черновик, 2 - отправлено
+      $xml->addChild('SaveMethod', SAVE_METHOD); // 1 - черновик, 2 - отправлено
       $xmlString = $xml->asXML();
       file_put_contents($fileName, $xmlString);
       $xmlArray[] = $fileName;
@@ -97,7 +97,7 @@ function createXML($firstName, $lastName, $snils, $records): array {
   if (count($verificationMeasuringInstrumentData->children()) > 0) {
     $fileCounter++;
     $fileName = tempnam(sys_get_temp_dir(), 'xml');
-    $xml->addChild('SaveMethod', '1'); // 1 - черновик, 2 - отправлено
+    $xml->addChild('SaveMethod', SAVE_METHOD); // 1 - черновик, 2 - отправлено
     $xmlString = $xml->asXML();
     file_put_contents($fileName, $xmlString);
     $xmlArray[] = $fileName;
