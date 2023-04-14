@@ -69,7 +69,8 @@ function createXML($firstName, $lastName, $snils, $records): array {
     $verificationMeasuringInstrument = $verificationMeasuringInstrumentData->addChild('VerificationMeasuringInstrument');
     $verificationMeasuringInstrument->addChild('NumberVerification', $record['NumberVerification']);
     $verificationMeasuringInstrument->addChild('DateVerification', $record['DateVerification']);
-    $verificationMeasuringInstrument->addChild('DateEndVerification', $record['DateEndVerification']);
+    if(!is_null($record['DateEndVerification']))
+        $verificationMeasuringInstrument->addChild('DateEndVerification', $record['DateEndVerification']);
     $verificationMeasuringInstrument->addChild('TypeMeasuringInstrument', $record['TypeMeasuringInstrument']);
     $approvedEmployee = $verificationMeasuringInstrument->addChild('ApprovedEmployee');
     $name = $approvedEmployee->addChild('Name');
