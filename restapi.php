@@ -32,13 +32,18 @@ class restapi
 
         foreach ($records as $record) {
             $verification_id = (string)$record->success->globalID;
-            $verification = json_decode($this->verification($verification_id));
-
+            $verification = (json_decode($this->verification($verification_id)))->result;
+            $modification = $verification->miInfo->singleMI->modification;
+            $vrfDate = date('Y-m-d', strtotime($verification->vriInfo->vrfDate));
+            $validDate = null;
+            if(isset($verification->vriInfo->validDate))
+                $validDate = date('Y-m-d', strtotime($verification->vriInfo->validDate));
+            $conclusion = isset($verification->result->vriInfo->applicable) ? 1 : 2; // 1 - пригоден, 2 - непригоден
             $verificationData[] = [
-                'TypeMeasuringInstrument' => $verification->result->miInfo->singleMI->modification,
-                'DateVerification' => date('Y-m-d', strtotime($verification->result->vriInfo->vrfDate)),
-                'DateEndVerification' => date('Y-m-d', strtotime($verification->result->vriInfo->validDate)),
-                'ResultVerification' => isset($verification->result->vriInfo->applicable) ? 1 : 2, // 1 - пригоден, 2 - непригоден
+                'TypeMeasuringInstrument' => $modification,
+                'DateVerification' => $vrfDate,
+                'DateEndVerification' => $validDate,
+                'ResultVerification' => $conclusion,
                 'NumberVerification' => $verification_id,
                 ];
         }
@@ -52,8 +57,8 @@ class restapi
             'header' => 'Authorization: Bearer '. $this->token
         ));
         $context  = stream_context_create($options);
-        $response = file_get_contents($url, false, $context);
-        return str_replace('gost:', '', $response);
+        $response = @file_get_contents($url, false, $context);
+        return !$response ? null : str_replace('gost:', '', $response);
     }
     function verification(int $id): ?string
     {
