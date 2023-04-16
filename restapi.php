@@ -33,14 +33,14 @@ class restapi
         foreach ($records as $record) {
             $verification_id = (string)$record->success->globalID;
             $verification = (json_decode($this->verification($verification_id)))->result;
-            $modification = $verification->miInfo->singleMI->modification;
+            $mitype = $verification->miInfo->singleMI->mitypeType;
             $vrfDate = date('Y-m-d', strtotime($verification->vriInfo->vrfDate));
             $validDate = null;
             if(isset($verification->vriInfo->validDate))
                 $validDate = date('Y-m-d', strtotime($verification->vriInfo->validDate));
             $conclusion = isset($verification->vriInfo->applicable) ? 1 : 2; // 1 - пригоден, 2 - непригоден
             $verificationData[] = [
-                'TypeMeasuringInstrument' => $modification,
+                'TypeMeasuringInstrument' => $mitype,
                 'DateVerification' => $vrfDate,
                 'DateEndVerification' => $validDate,
                 'ResultVerification' => $conclusion,
