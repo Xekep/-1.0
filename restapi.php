@@ -38,7 +38,7 @@ class restapi
             $validDate = null;
             if(isset($verification->vriInfo->validDate))
                 $validDate = date('Y-m-d', strtotime($verification->vriInfo->validDate));
-            $conclusion = isset($verification->result->vriInfo->applicable) ? 1 : 2; // 1 - пригоден, 2 - непригоден
+            $conclusion = isset($verification->vriInfo->applicable) ? 1 : 2; // 1 - пригоден, 2 - непригоден
             $verificationData[] = [
                 'TypeMeasuringInstrument' => $modification,
                 'DateVerification' => $vrfDate,
